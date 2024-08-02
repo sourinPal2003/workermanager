@@ -1,0 +1,3 @@
+# npm install primeflex
+# npm install primereact primeicons
+npm install react-router-dom

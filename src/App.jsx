@@ -1,12 +1,3 @@
-// import { useEffect, useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-// import './App.css'
-// import AddUserForm from './components/AddUserForm'
-// import AllEmployees from './components/AllEmployees'
-// import { OperationProvider } from './contexts/OperationContext'
-// import Header from './components/Header'
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -19,7 +10,8 @@ import CompleteState from './components/CompleteState';
 import CancelState from './components/CancelState';
 import AllEmployees from './components/AllEmployees'
 import MainLayout from './components/MainLayout';
-
+import AllWorks from './components/AllWorks';
+import EditWork from './components/EditWork';
 
 import './App.css'
 import { useEffect, useState } from 'react'
@@ -65,6 +57,32 @@ function App() {
     setAllWorkers(allWorkers.map((worker) => worker.id === id ? { ...worker, workid, workstatus: "pending", totalAssignedwork: worker.totalAssignedwork + 1 } : worker));
   }
 
+  // Work state and handlers
+  const [allWorks, setAllWorks] = useState([]);
+
+  const addWork = (work) => {
+    setAllWorks([work, ...allWorks]);
+  };
+
+  const deleteWork = (id) => {
+    setAllWorks(allWorks.filter((work) => work.id !== id));
+  };
+
+  const updateWork = (id, updatedWork) => {
+    setAllWorks(allWorks.map((work) => work.id === id ? { ...work, ...updatedWork } : work));
+  };
+
+  useEffect(() => {
+    const allWorksLocalData = JSON.parse(localStorage.getItem('allWorks'));
+    if (allWorksLocalData && allWorksLocalData.length) {
+      setAllWorks(allWorksLocalData);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('allWorks', JSON.stringify(allWorks));
+  }, [allWorks]);
+
   useEffect(() => {
     const allWorkersLocalData = JSON.parse(localStorage.getItem('allWorkers'));
     if (allWorkersLocalData && allWorkersLocalData.length) {
@@ -76,7 +94,11 @@ function App() {
     localStorage.setItem('allWorkers', JSON.stringify(allWorkers));
   }, [allWorkers])
   return (
-    <OperationProvider value={{ allWorkers, setAllWorkers, addWorker, updateWorkerDetails, deleteWorker, updateWorkstatus, updateWorkid, filteredWorkers, setFilteredWorkers }}>
+    <OperationProvider value={{
+      allWorkers, setAllWorkers, addWorker, updateWorkerDetails, deleteWorker, updateWorkstatus, updateWorkid,
+      filteredWorkers, setFilteredWorkers,
+      allWorks, addWork, deleteWork, updateWork // <-- pass work handlers
+    }}>
       {/* <Header/>
     <AddEmployee />
     <AllEmployees/> */}
@@ -94,6 +116,8 @@ function App() {
             <Route path="add-work" element={<AddWork />} />
             <Route path="add-employee" element={<AddEmployee />} />
             <Route path="/employee/:idParam" element={<UpdateEmpDetails />} />
+            <Route path="all-works" element={<AllWorks />} />
+            <Route path="edit-work/:workId" element={<EditWork />} /> {/* <-- Add this route */}
           </Route>
         </Routes>
       </Router>

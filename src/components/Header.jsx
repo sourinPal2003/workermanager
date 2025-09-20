@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const Header = () => {
+export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {
@@ -9,8 +9,8 @@ const Header = () => {
     };
 
     return (
-        <header className="bg-white border-b border-solid border-b-[#e7ebf3] px-6 lg:px-10 py-3 w-full">
-            <div className="flex items-center justify-between max-w-screen-xl mx-auto">
+        <header className="bg-white shadow">
+            <nav className="container mx-auto flex items-center justify-between py-4">
                 <div className="flex items-center gap-4 text-[#0e121b]">
                     <div className="size-4">
                         <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,16 +24,18 @@ const Header = () => {
                 </div>
                 <div className="flex flex-1 justify-end lg:gap-8">
                     <div className="hidden lg:flex items-center gap-9">
-                        <Link to="" className="text-[#0e121b] text-sm font-medium leading-normal">
-                            Manage Employees
+                        <Link to="/" className="text-gray-700 hover:text-indigo-600 font-semibold">
+                            Home
                         </Link>
-                        <Link to="add-work" className="text-[#0e121b] text-sm font-medium leading-normal">
-                            Add Work
-                        </Link>
-                        <Link to="add-employee" className="text-[#0e121b] text-sm font-medium leading-normal">
+                        <Link to="/add-employee" className="text-gray-700 hover:text-indigo-600 font-semibold">
                             Add Employee
                         </Link>
-                        
+                        <Link to="/add-work" className="text-gray-700 hover:text-indigo-600 font-semibold">
+                            Add Work
+                        </Link>
+                        <Link to="/all-works" className="text-gray-700 hover:text-indigo-600 font-semibold">
+                            All Work
+                        </Link>
                     </div>
                     <button
                         onClick={toggleMenu}
@@ -54,30 +56,22 @@ const Header = () => {
                     </button>
                 </div>
                 {isMenuOpen && (
-                    <div className="lg:hidden absolute top-16 right-0 left-0 bg-white shadow-lg py-2 px-4">
-                        <a href="#" className="block py-1 text-[#0e121b] text-sm font-medium">
-                            Data Catalog
-                        </a>
-                        <a href="#" className="block py-1 text-[#0e121b] text-sm font-medium">
-                            Jobs
-                        </a>
-                        <a href="#" className="block py-1 text-[#0e121b] text-sm font-medium">
-                            Workspace
-                        </a>
-                        <a href="#" className="block py-1 text-[#0e121b] text-sm font-medium">
-                            API
-                        </a>
-                        <a href="#" className="block py-1 text-[#0e121b] text-sm font-medium">
-                            Model
-                        </a>
-                        <a href="#" className="block py-1 text-[#0e121b] text-sm font-medium">
-                            Docs
-                        </a>
+                    <div className="lg:hidden absolute top-16 right-0 left-0 bg-white shadow-lg py-2 px-4 z-50">
+                        <Link to="/" className="block py-1 text-[#0e121b] text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
+                            Home
+                        </Link>
+                        <Link to="/add-employee" className="block py-1 text-[#0e121b] text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
+                            Add Employee
+                        </Link>
+                        <Link to="/add-work" className="block py-1 text-[#0e121b] text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
+                            Add Work
+                        </Link>
+                        <Link to="/all-works" className="block py-1 text-[#0e121b] text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
+                            All Work
+                        </Link>
                     </div>
                 )}
-            </div>
+            </nav>
         </header>
     );
-};
-
-export default Header;
+}

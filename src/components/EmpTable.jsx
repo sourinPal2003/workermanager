@@ -3,16 +3,40 @@ import { useOperation } from '../contexts/OperationContext';
 import EmpTableItem from './EmpTableItem';
 
 export default function EmpTable({ bannerWorkState }) {
-    const { allWorkers,filteredWorkers, setFilteredWorkers } = useOperation();
-    // const [filteredWorkers, setFilteredWorkers] = useState([]);
+    const { allWorkers, filteredWorkers, setFilteredWorkers } = useOperation();
+    const [search, setSearch] = useState('');
 
     useEffect(() => {
-        const tempVar = bannerWorkState === "all" ? allWorkers : allWorkers.filter(worker => worker.workstatus === bannerWorkState);
+        let tempVar = bannerWorkState === "all"
+            ? allWorkers
+            : allWorkers.filter(worker => worker.workstatus === bannerWorkState);
+
+        
+        
+        if (search.trim() !== '') {
+            const searchLower = search.toLowerCase();
+            tempVar = tempVar.filter(worker =>
+                worker.firstname.toLowerCase().includes(searchLower) ||
+                worker.lastname.toLowerCase().includes(searchLower) ||
+                worker.jobrole.toLowerCase().includes(searchLower) ||
+                worker.workid.toLowerCase().includes(searchLower)
+            );
+        }
+
         setFilteredWorkers(tempVar);
-    }, [allWorkers, bannerWorkState]);
+    }, [allWorkers, bannerWorkState, search, setFilteredWorkers]);
 
     return (
         <div id="ss1" className="px-4 py-3 @container">
+            <div className="mb-4 flex justify-end">
+                <input
+                    type="text"
+                    placeholder="Search by name, role or Work ID"
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                    className="border border-gray-300 rounded-md px-3 py-2 w-72 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+            </div>
             <div className="flex overflow-hidden rounded-xl border border-[#d0d7e7] bg-[#f8f9fc]">
                 <table className="flex-1">
                     <thead>

@@ -3,12 +3,11 @@ import { useOperation } from '../contexts/OperationContext';
 import { Link } from 'react-router-dom';
 
 export default function EmpTableItem({ worker, bannerWorkState }) {
+    const { allWorks, deleteWorker, updateWorkstatus, updateWorkid } = useOperation();
 
-    // Sample workId array
-    const workIdDatas = ["A1B2C3", "D4E5F6", "G7H8I9", "J0K1L2", "M3N4O5", "P6Q7R8", "S9T0U1", "V2W3X4", "Y5Z6A7", "B8C9D0"];
+    const allWorkIds = allWorks.map(work => work.id);
 
-    const { id, firstname, lastname, jobrole, progressRate, workid, totalworkdone,totalAssignedwork, workstatus } = worker;
-    const { deleteWorker, updateWorkstatus, updateWorkid } = useOperation();
+    const { id, firstname, lastname, jobrole, progressRate, workid, totalworkdone, totalAssignedwork, workstatus } = worker;
     const [workstatusHold, SetWorkstatusHold] = useState(workstatus);
     const [workidHold, SetWorkidHold] = useState(workid || "null");
 
@@ -16,16 +15,14 @@ export default function EmpTableItem({ worker, bannerWorkState }) {
         const newWorkstatus = e.target.value;
         updateWorkstatus(id, newWorkstatus);
         SetWorkstatusHold(newWorkstatus);
-        SetWorkidHold("null");    //    
-        // alert(`${firstname} ${lastname}'s Work status updated successfully`);
+        SetWorkidHold("null");
     };
 
     const editWorkid = (e) => {
         const newWorkid = e.target.value;
         updateWorkid(id, newWorkid);
-        SetWorkidHold(newWorkid);  
-        SetWorkstatusHold("pending");      
-        // alert(`${firstname} ${lastname}'s Work id updated successfully`);
+        SetWorkidHold(newWorkid);
+        SetWorkstatusHold("pending");
     };
 
     return (
@@ -41,7 +38,7 @@ export default function EmpTableItem({ worker, bannerWorkState }) {
                 </td>
             )}
 
-            <td  className="table-a589e3d2-3512-4ac2-81b6-837810765f5f-column-240 h-[72px] px-4 py-2 w-[400px] text-[#0e121b] text-sm font-normal leading-normal text-center">
+            <td className="table-a589e3d2-3512-4ac2-81b6-837810765f5f-column-240 h-[72px] px-4 py-2 w-[400px] text-[#0e121b] text-sm font-normal leading-normal text-center">
                 <Link to={`/employee/${id}`}>{firstname} {lastname} </Link>
             </td>
 
@@ -69,12 +66,23 @@ export default function EmpTableItem({ worker, bannerWorkState }) {
                         onChange={editWorkid}
                     >
                         <option value="null" disabled>Null</option>
-                        {workIdDatas.map((wId) => <option key={wId} value={wId}>#{wId}</option>)}
+                        {allWorkIds.map((wId) => (
+                            <option key={wId} value={wId}>#{wId}</option>
+                        ))}
                     </select>
                 </td>
             ) : (
                 <td className="table-a589e3d2-3512-4ac2-81b6-837810765f5f-column-600 h-[72px] px-4 py-2 w-[100px] text-[#4e6797] text-sm font-normal leading-normal text-center">
-                    #{workidHold}
+                    {bannerWorkState === "pending" && workidHold !== "null" ? (
+                        <Link
+                            to={`/edit-work/${workidHold}`}
+                            className="text-blue-600 underline"
+                        >
+                            #{workidHold}
+                        </Link>
+                    ) : (
+                        <>#{workidHold}</>
+                    )}
                 </td>
             )}
 
